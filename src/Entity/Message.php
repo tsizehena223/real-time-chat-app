@@ -27,6 +27,8 @@ class Message
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
+    private $mine;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,6 +78,18 @@ class Message
     public function setCreatedAt(\DateTimeInterface $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getMine()
+    {
+        return $this->mine;
+    }
+
+    public function setMine(?bool $mine)
+    {
+        $this->mine = $mine;
 
         return $this;
     }
