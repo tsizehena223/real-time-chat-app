@@ -21,28 +21,20 @@ class ParticipiantRepository extends ServiceEntityRepository
         parent::__construct($registry, Participiant::class);
     }
 
-//    /**
-//     * @return Participiant[] Returns an array of Participiant objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findParticipantByConversationIdAndUserId(?int $conversationId, ?int $userId)
+    {
+        $qb = $this->createQueryBuilder("p");
+        $qb->where(
+            $qb->expr()->andX(
+                $qb->expr()->eq("p.conversation", ":conversationId"),
+                $qb->expr()->neq("p.user", ":userId")
+            )
+        )
+            ->setParameters([
+                "conversationId" => $conversationId,
+                "userId" => $userId
+            ]);
 
-//    public function findOneBySomeField($value): ?Participiant
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        return $qb->getQuery()->getOneOrNullResult();
+    }
 }
